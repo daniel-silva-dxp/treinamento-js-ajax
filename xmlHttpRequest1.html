@@ -18,6 +18,20 @@
         <h1>Estados</h1>
 
         <script>
+
+            const config = {
+                url: 'dados/estados.json',
+                method: 'GET',
+                sucesso(response) {
+                    const states = JSON.parse(response);
+                    createTable(states);
+                },
+                erro(e) {
+                    const msg = document.createTextNode(`${e.code}: ${e.text}`)
+                    document.body.appendChild(msg)
+                }
+            }
+
             function ajax(config) {
                 const xhr = new XMLHttpRequest();
                 xhr.open(config.method, config.url, true);
@@ -26,7 +40,7 @@
                     if (xhr.status === 200) {
                         config.sucesso(xhr.response);
                     } else if (xhr >= 400) {
-                        config.err({
+                        config.erro({
                             code: xhr.status,
                             text: xhr.statusText
                         })
@@ -35,8 +49,8 @@
                 xhr.send();
             }
 
-            function createTable(state) {
-                const lines = state.map((state) => {
+            function createTable(states) {
+                const lines = states.map((state) => {
                     const tdId = document.createElement('td');
                     tdId.innerHTML = state.id;
 
@@ -60,17 +74,7 @@
                 document.body.appendChild(table)
             }
 
-            ajax({
-                url: 'dados/estados.json',
-                method: 'GET',
-                sucesso(response) {
-                    const state = JSON.parse(response);
-                    createTable(state);
-                },
-                erro(e) {
-                    const msg = document.createTextNode(`${e.code}: ${e.text}`)
-                }
-            })
+            ajax(config)
         </script>
     </body>
 </html>
