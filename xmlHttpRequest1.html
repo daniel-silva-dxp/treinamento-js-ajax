@@ -1,16 +1,76 @@
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>XMLHttpRequest #01</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel='stylesheet' href='css/estilo.css'>
+    </head>
+    <body class="conteudo exercicio">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <h1>Estados</h1>
 
-<head>
-    <meta charset='UTF-8'>
-    <title>XMLHttpRequest #01</title>
-    <link rel='stylesheet' href='css/estilo.css'>
-</head>
+        <script>
+            function ajax(config) {
+                const xhr = new XMLHttpRequest();
+                xhr.open(config.method, config.url, true);
 
-<body class="conteudo exercicio">
-    <h1>Estados</h1>
+                xhr.onload = (event) => {
+                    if (xhr.status === 200) {
+                        config.sucesso(xhr.response);
+                    } else if (xhr >= 400) {
+                        config.err({
+                            code: xhr.status,
+                            text: xhr.statusText
+                        })
+                    }
+                }
+                xhr.send();
+            }
 
-    <script>
-        // ...
-    </script>
-</body>
+            function createTable(state) {
+                const lines = state.map((state) => {
+                    const tdId = document.createElement('td');
+                    tdId.innerHTML = state.id;
+
+                    const tdName = document.createElement('td');
+                    tdName.innerHTML = state.nome;
+
+                    const tdSigla = document.createElement('td');
+                    tdSigla.innerHTML = state.sigla;
+
+                    const tr = document.createElement('tr')
+
+                    tr.appendChild(tdId);
+                    tr.appendChild(tdName)
+                    tr.appendChild(tdSigla)
+
+                    return tr
+                })
+
+                const table = document.createElement('table');
+                lines.forEach((line) => table.appendChild(line));
+                document.body.appendChild(table)
+            }
+
+            ajax({
+                url: 'dados/estados.json',
+                method: 'GET',
+                sucesso(response) {
+                    const state = JSON.parse(response);
+                    createTable(state);
+                },
+                erro(e) {
+                    const msg = document.createTextNode(`${e.code}: ${e.text}`)
+                }
+            })
+        </script>
+    </body>
+</html>
