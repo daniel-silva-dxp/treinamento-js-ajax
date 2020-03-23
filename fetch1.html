@@ -11,6 +11,39 @@
     <h1>Estados</h1>
 
     <script>
-        // ...
+        
+        const url = 'dados/estados.json';
+        fetch(url)
+            .then((response) => response.json())
+            .then(estados => {
+                createTable(estados)
+            });
+        
+
+        function createTable(estados) {
+            const linhas = estados.map((estado) => {
+                const tdId = document.createElement('td');
+                tdId.innerHTML = estado.id;
+
+                const tdName = document.createElement('td');
+                tdName.innerHTML = estado.nome;
+
+                const tdSigla = document.createElement('td');
+                tdSigla.innerHTML = estado.sigla;
+
+                const tr = document.createElement('tr')
+
+                tr.appendChild(tdId);
+                tr.appendChild(tdName)
+                tr.appendChild(tdSigla)
+
+                return tr
+            })
+
+            const table = document.createElement('table');
+            linhas.forEach((linha) => table.appendChild(linha));
+            document.body.appendChild(table)
+        }
+        
     </script>
 </body>
